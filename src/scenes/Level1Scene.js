@@ -8,6 +8,7 @@ const TOTAL_GOAL = 5_000_000;
 const FUNDING_RATE_PER_SEC = 180_000; // £180k/s per active line
 
 const UK = { x: 338, y: 183 };
+const BINFACE_SPEED = 120; // px/s keyboard/drag movement
 
 const SOURCES = [
   { id: 'russia',  label: 'RUSSIA',        x: 596, y: 132, color: 0xff4444, hex: '#ff4444' },
@@ -60,6 +61,9 @@ export default class Level1Scene extends Phaser.Scene {
     this._linePulse  = SOURCES.map(() => 0);
     this._done       = false;
 
+    this._farageAtSource  = false;
+    this._farageRingPulse = 0;
+
     this._buildMap();
     this._buildLines();
     this._buildNodes();
@@ -93,10 +97,10 @@ export default class Level1Scene extends Phaser.Scene {
     this.add.text(8, 5, 'LEVEL 1 — FOLLOW THE MONEY', { font: '13px monospace', fill: '#00ff88' });
 
     this.add.rectangle(0, H - 36, W, 36, 0x000000, 0.85).setOrigin(0);
-    this.add.text(W / 2, H - 30, '1st click on a line: REVEAL it  •  2nd click on REVEALED line: SEVER it', {
+    this.add.text(W / 2, H - 30, 'WASD / arrows: move BINFACE  •  Click/tap a REVEALED line to SEVER it', {
       font: '11px monospace', fill: '#ffcc00', align: 'center',
     }).setOrigin(0.5, 0);
-    this.add.text(W / 2, H - 14, 'Move BINFACE over ?? hints to find hidden money trails — stop £5m reaching Clacton!', {
+    this.add.text(W / 2, H - 14, 'Walk close to glowing ?? trails to REVEAL them — stop £5m reaching Clacton!', {
       font: '10px monospace', fill: '#aaaaaa', align: 'center',
     }).setOrigin(0.5, 0);
   }
@@ -224,18 +228,30 @@ export default class Level1Scene extends Phaser.Scene {
     const g = this._farageGfx;
     g.clear();
     if (this._done) return;
-    g.fillStyle(0x222244).fillRect(x - 5, y + 12, 4, 8);
-    g.fillStyle(0x222244).fillRect(x + 1,  y + 12, 4, 8);
-    g.fillStyle(0x1a2f5e).fillRect(x - 8, y, 16, 14);
-    g.fillStyle(0xf0b4c4).fillRect(x - 1, y + 1, 4, 10); // pink shirt
-    g.fillStyle(0x2a7cc8).fillRect(x,  y + 1, 2, 10);    // blue REFORM tie
-    g.fillStyle(0xd4a070).fillCircle(x, y - 6, 8);        // ruddy face
-    g.fillStyle(0x9a9a9a).fillRect(x - 7, y - 14, 14, 7); // grey hair
-    g.fillStyle(0xcc8833, 0.85).fillRect(x + 8, y + 4, 5, 8);
-    g.fillStyle(0xffffff, 0.3).fillRect(x + 8, y + 4, 5, 3);
-    g.fillStyle(0xffffff).fillRect(x + 8, y - 6, 6, 2);
-    g.fillStyle(0xff6600).fillCircle(x + 14, y - 5, 1);
-    this._farageLabel.setPosition(x, y - 24);
+
+    // Pulsing red ring when Farage is activating a source
+    if (this._farageAtSource) {
+      const rp = this._farageRingPulse;
+      const ra = 0.4 + 0.4 * Math.sin(rp * 4);
+      const rr = 22 + 8 * Math.sin(rp * 4);
+      g.lineStyle(3, 0xff4444, ra);
+      g.strokeCircle(x, y, rr);
+    }
+
+    // 1.4× scaled pixel-art Farage
+    g.fillStyle(0x222244).fillRect(x - 7,  y + 17, 6,  11);  // left leg
+    g.fillStyle(0x222244).fillRect(x + 1,  y + 17, 6,  11);  // right leg
+    g.fillStyle(0x1a2f5e).fillRect(x - 11, y,      22, 20);  // body
+    g.fillStyle(0xf0b4c4).fillRect(x - 1,  y + 1,  6,  14); // pink shirt
+    g.fillStyle(0x2a7cc8).fillRect(x,      y + 1,  3,  14);  // blue REFORM tie
+    g.fillStyle(0xd4a070).fillCircle(x, y - 8, 11);          // ruddy face
+    g.fillStyle(0x9a9a9a).fillRect(x - 10, y - 20, 20, 10); // grey hair
+    g.fillStyle(0xcc8833, 0.85).fillRect(x + 11, y + 6,  7, 11); // pint
+    g.fillStyle(0xffffff, 0.3).fillRect( x + 11, y + 6,  7,  4); // pint foam
+    g.fillStyle(0xffffff).fillRect(      x + 11, y - 8,  8,  3); // cigarette
+    g.fillStyle(0xff6600).fillCircle(    x + 20, y - 7,  1.5);   // cig tip
+
+    this._farageLabel.setPosition(x, y - 34);
   }
 
   // ─── Binface sprite ──────────────────────────────────────────────────────
@@ -243,11 +259,10 @@ export default class Level1Scene extends Phaser.Scene {
   _buildBinface() {
     this._binfaceGfx   = this.add.graphics().setDepth(9);
     this._binfaceRadar = this.add.graphics().setDepth(8);
-    this._binfaceLabel = this.add.text(0, 0, 'BINFACE\n(move to scan)', {
+    this._binfaceLabel = this.add.text(0, 0, 'BINFACE', {
       font: '8px monospace', fill: '#00ccff', stroke: '#000', strokeThickness: 2, align: 'center',
     }).setOrigin(0.5).setDepth(10);
-    this._binfacePos    = { x: W * 0.55, y: H * 0.5 };
-    this._binfaceTarget = { x: W * 0.55, y: H * 0.5 };
+    this._binfacePos = { x: W * 0.55, y: H * 0.5 };
     this._radarPulse = 0;
     this._drawBinface();
   }
@@ -306,6 +321,9 @@ export default class Level1Scene extends Phaser.Scene {
     this._hudLines = this.add.text(W - 212, 95, 'Lines severed: 0 / 6', {
       font: '10px monospace', fill: '#aaaaaa',
     }).setDepth(21);
+
+    // Red urgency overlay — alpha driven by funding level above 70%
+    this._urgencyOverlay = this.add.rectangle(0, 0, W, H, 0xff0000, 0).setOrigin(0).setDepth(15);
   }
 
   _updateHUD() {
@@ -318,45 +336,73 @@ export default class Level1Scene extends Phaser.Scene {
 
     const sv = this._lineStates.filter(s => s === S_SEVERED).length;
     this._hudLines.setText(`Lines severed: ${sv} / 6`);
+
+    // Screen tint shifts red above 70% funding; pulse rate doubles above 70%
+    if (pct > 0.7) {
+      const intensity = ((pct - 0.7) / 0.3) * 0.12;
+      const pulse = 0.5 + 0.5 * Math.sin(this._linePulse[0] * 6);
+      this._urgencyOverlay.setAlpha(intensity * pulse);
+    } else {
+      this._urgencyOverlay.setAlpha(0);
+    }
   }
 
   // ─── Input ───────────────────────────────────────────────────────────────
 
   _buildInput() {
-    this.input.on('pointermove', (ptr) => {
-      this._binfaceTarget = { x: ptr.x, y: ptr.y };
-    });
+    // Keyboard movement
+    this._cursors = this.input.keyboard.createCursorKeys();
+    this._wasd    = this.input.keyboard.addKeys({ W: 'W', A: 'A', S: 'S', D: 'D' });
+
+    // Drag/tap tracking for mouse and touch
+    this._dragOrigin    = null;
+    this._binfaceOrigin = null;
+    this._dragMoved     = false;
+
     this.input.on('pointerdown', (ptr) => {
       if (this._done) return;
-      this._handleClick(ptr.x, ptr.y);
+      this._dragMoved     = false;
+      this._dragOrigin    = { x: ptr.x, y: ptr.y };
+      this._binfaceOrigin = { ...this._binfacePos };
+    });
+
+    this.input.on('pointermove', (ptr) => {
+      if (!ptr.isDown || !this._dragOrigin) return;
+      const dx = ptr.x - this._dragOrigin.x;
+      const dy = ptr.y - this._dragOrigin.y;
+      if (Math.hypot(dx, dy) > 6) {
+        this._dragMoved = true;
+        this._binfacePos.x = Phaser.Math.Clamp(this._binfaceOrigin.x + dx, 0, W);
+        this._binfacePos.y = Phaser.Math.Clamp(this._binfaceOrigin.y + dy, 28, H - 36);
+      }
+    });
+
+    this.input.on('pointerup', (ptr) => {
+      if (this._done) return;
+      if (!this._dragMoved) this._handleClick(ptr.x, ptr.y);
+      this._dragOrigin    = null;
+      this._binfaceOrigin = null;
     });
   }
 
   _handleClick(px, py) {
+    // Only revealed lines can be severed — auto-reveal happens via proximity
     let bestDist = 44;
     let bestIdx  = -1;
 
     SOURCES.forEach((src, i) => {
-      if (this._lineStates[i] === S_SEVERED) return;
+      if (this._lineStates[i] !== S_REVEALED) return;
       const d = distPointToSegment(px, py, UK.x, UK.y, src.x, src.y);
       if (d < bestDist) { bestDist = d; bestIdx = i; }
     });
 
     if (bestIdx === -1) return;
-    const st = this._lineStates[bestIdx];
-
-    if (st === S_HIDDEN) {
-      this._lineStates[bestIdx] = S_REVEALED;
-      sfx('reveal');
-      this._popText(bestIdx, '👁 REVEALED!', SOURCES[bestIdx].hex);
-    } else if (st === S_REVEALED) {
-      this._lineStates[bestIdx] = S_SEVERED;
-      this._lineActive[bestIdx] = false;
-      sfx('sever');
-      this._popText(bestIdx, '✂ SEVERED!', '#ff4444');
-      this._screenFlash();
-      this._checkWin();
-    }
+    this._lineStates[bestIdx] = S_SEVERED;
+    this._lineActive[bestIdx] = false;
+    sfx('sever');
+    this._popText(bestIdx, '✂ SEVERED!', '#ff4444');
+    this._screenFlash();
+    this._checkWin();
   }
 
   _popText(i, msg, fill) {
@@ -388,16 +434,17 @@ export default class Level1Scene extends Phaser.Scene {
 
     this._farageTarget    = { x: SOURCES[idx].x, y: SOURCES[idx].y };
     this._farageOnArrival = () => {
-      // Activate the line
-      if (this._lineStates[idx] !== S_SEVERED) this._lineActive[idx] = true;
-      // Wait at source 2-4 s, then return to UK
+      if (this._lineStates[idx] !== S_SEVERED) {
+        this._lineActive[idx] = true;
+        this._farageAtSource  = true;
+      }
       this._farageTarget    = null;
       this._farageOnArrival = null;
       this.time.delayedCall(2000 + Math.random() * 2000, () => {
         if (this._done) return;
+        this._farageAtSource  = false;
         this._farageTarget    = { x: UK.x, y: UK.y };
         this._farageOnArrival = () => {
-          // Brief pause at UK then pick next target
           this._farageTarget    = null;
           this._farageOnArrival = null;
           this.time.delayedCall(800 + Math.random() * 700, () => this._goToSource());
@@ -478,6 +525,7 @@ export default class Level1Scene extends Phaser.Scene {
 
     // Advance pulse timers
     for (let i = 0; i < SOURCES.length; i++) this._linePulse[i] += delta * 0.003;
+    this._farageRingPulse += delta * 0.003;
 
     // Accumulate funding from active, non-severed lines
     let activeFunding = 0;
@@ -489,16 +537,36 @@ export default class Level1Scene extends Phaser.Scene {
     this._redrawLines();
     this._updateFarage(delta);
 
-    // Smooth Binface movement toward pointer
-    const { x: bx, y: by } = this._binfacePos;
-    const tdx  = this._binfaceTarget.x - bx;
-    const tdy  = this._binfaceTarget.y - by;
-    const tdst = Math.hypot(tdx, tdy);
-    if (tdst > 1) {
-      const step = Math.min(130 * (delta / 1000), tdst);
-      this._binfacePos.x += (tdx / tdst) * step;
-      this._binfacePos.y += (tdy / tdst) * step;
+    // Keyboard movement for Binface (WASD / arrow keys)
+    const kLeft  = this._cursors.left.isDown  || this._wasd.A.isDown;
+    const kRight = this._cursors.right.isDown || this._wasd.D.isDown;
+    const kUp    = this._cursors.up.isDown    || this._wasd.W.isDown;
+    const kDown  = this._cursors.down.isDown  || this._wasd.S.isDown;
+
+    let vx = 0, vy = 0;
+    if (kLeft)  vx -= 1;
+    if (kRight) vx += 1;
+    if (kUp)    vy -= 1;
+    if (kDown)  vy += 1;
+
+    if (vx !== 0 || vy !== 0) {
+      const len = Math.hypot(vx, vy);
+      const spd = BINFACE_SPEED * (delta / 1000);
+      this._binfacePos.x = Phaser.Math.Clamp(this._binfacePos.x + (vx / len) * spd, 0, W);
+      this._binfacePos.y = Phaser.Math.Clamp(this._binfacePos.y + (vy / len) * spd, 28, H - 36);
     }
+
+    // Auto-reveal: walk within 60px of an active hidden line to expose it
+    SOURCES.forEach((src, i) => {
+      if (this._lineStates[i] !== S_HIDDEN || !this._lineActive[i]) return;
+      const d = distPointToSegment(this._binfacePos.x, this._binfacePos.y, UK.x, UK.y, src.x, src.y);
+      if (d < 60) {
+        this._lineStates[i] = S_REVEALED;
+        sfx('reveal');
+        this._popText(i, '👁 REVEALED!', SOURCES[i].hex);
+      }
+    });
+
     // Advance radar pulse (0→1 cycle every ~1.2 s)
     this._radarPulse = (this._radarPulse + delta * 0.0008) % 1;
     this._drawBinface();
