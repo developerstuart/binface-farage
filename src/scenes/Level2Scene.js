@@ -758,7 +758,7 @@ export default class Level2Scene extends Phaser.Scene {
     mk(115, bY, 0xffffff, '▶', () => { t.right = true; }, () => { t.right = false; });
     mk(W - 48, bY, 0x00ccff, '▲', () => { t.jump = true; });
     mk(W - 115, bY, 0x888888, '▼', () => { t.crouch = true; }, () => { t.crouch = false; });
-    mk(W - 190, bY, 0xff69b4, '🥤', () => { t.fire = true; });
+    mk(W - 190, bY, 0xff69b4, 'FIRE', () => { t.fire = true; });
   }
 
   // ─────────────────────────────────────────────────────────────
