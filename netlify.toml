@@ -5,6 +5,15 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Security headers on all routes
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-XSS-Protection = "1; mode=block"
+
 # Cache hashed assets indefinitely (Vite content-hashes filenames)
 [[headers]]
   for = "/assets/*"
