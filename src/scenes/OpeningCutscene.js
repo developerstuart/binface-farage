@@ -201,76 +201,100 @@ export default class OpeningCutscene extends Phaser.Scene {
     g.fillStyle(0x333333).fillEllipse(W / 2, H * 0.285, 22, 30);
     g.fillStyle(0x888888).fillEllipse(W / 2, H * 0.28, 10, 14);
 
-    // ── Farage character ────────────────────────────────────────────────────
+    // ── Farage character (pixel-art style matching reference image) ──────────
     const fx = W / 2;
     const fy = H * 0.44;
 
-    // Body – dark blue suit
-    g.fillStyle(0x0d1a3a).fillRect(fx - 50, fy - 15, 100, 115);
-    // Lapels (lighter)
-    g.fillStyle(0x1a2a55).fillTriangle(fx - 22, fy - 15, fx - 50, fy - 15, fx, fy + 25);
-    g.fillStyle(0x1a2a55).fillTriangle(fx + 22, fy - 15, fx + 50, fy - 15, fx, fy + 25);
-    // White shirt
-    g.fillStyle(0xeeeeee).fillRect(fx - 10, fy - 16, 20, 44);
-    // Red tie
-    g.fillStyle(0xcc0000).fillTriangle(fx - 6, fy - 10, fx + 6, fy - 10, fx, fy + 58);
-    g.fillStyle(0xaa0000).fillRect(fx - 5, fy - 12, 10, 9);
+    // Dark navy suit body (pixel art blocky)
+    g.fillStyle(0x1a2f5e).fillRect(fx - 52, fy - 15, 104, 115);
+    // Suit shading — left and right edge darker
+    g.fillStyle(0x111e40).fillRect(fx - 52, fy - 15, 12, 115);
+    g.fillStyle(0x111e40).fillRect(fx + 40, fy - 15, 12, 115);
 
-    // Pint (right side, over lectern)
-    g.fillStyle(0xf5a623).fillRect(fx + 66, H * 0.455, 26, 48);
-    g.fillStyle(0xfde68a).fillRect(fx + 66, H * 0.455, 26, 10);
-    g.lineStyle(2, 0xd4841a).strokeRect(fx + 66, H * 0.455, 26, 48);
-    g.fillStyle(0xffffff, 0.3).fillRect(fx + 69, H * 0.457, 4, 42);
+    // Pink shirt visible between lapels
+    g.fillStyle(0xf0b4c4).fillRect(fx - 18, fy - 16, 36, 52);
 
-    // Head
-    g.fillStyle(0xe8c49a).fillEllipse(fx, fy - 58, 84, 88);
+    // REFORM blue tie — pixel art strips
+    g.fillStyle(0x2a7cc8).fillRect(fx - 9, fy - 12, 18, 40);
+    g.fillTriangle(fx - 11, fy + 28, fx + 11, fy + 28, fx, fy + 48);
+    // Tie highlight stripes
+    g.fillStyle(0x5aa8f0);
+    g.fillRect(fx - 7, fy - 6, 14, 5);
+    g.fillRect(fx - 7, fy + 8, 14, 5);
+    g.fillRect(fx - 7, fy + 20, 14, 5);
 
-    // Hair (light-brown, side-parted)
-    g.fillStyle(0x9b7a2e).fillEllipse(fx - 6, fy - 98, 88, 44);
-    g.fillStyle(0x9b7a2e).fillRect(fx - 44, fy - 98, 90, 44);
-    // Hair part
-    g.lineStyle(2, 0xbfa048);
-    g.beginPath();
-    g.moveTo(fx + 8, fy - 102);
-    g.lineTo(fx + 14, fy - 72);
-    g.strokePath();
+    // Pint glass (right of lectern — golden amber beer, white foam)
+    g.fillStyle(0xd0d0d0).fillRect(fx + 66, H * 0.455, 28, 52);
+    g.fillStyle(0xd49018).fillRect(fx + 66, H * 0.467, 28, 40);
+    g.fillStyle(0xffffff).fillRect(fx + 66, H * 0.455, 28, 10);
+    g.fillStyle(0xffffff, 0.3).fillRect(fx + 68, H * 0.457, 5, 46);
 
-    // Eyebrows (slightly furrowed for smug look)
-    g.lineStyle(3, 0x6b4c1a);
-    g.beginPath();
-    g.moveTo(fx - 26, fy - 79);
-    g.lineTo(fx - 8, fy - 73);
-    g.strokePath();
-    g.beginPath();
-    g.moveTo(fx + 8, fy - 73);
-    g.lineTo(fx + 26, fy - 79);
-    g.strokePath();
+    // Head block (pixel art rectangular, slight corner softening)
+    g.fillStyle(0xd4956a).fillRect(fx - 40, fy - 105, 80, 88);
+    // Corner inset pixels for slight rounding
+    g.fillStyle(0x1a2f5e);
+    g.fillRect(fx - 40, fy - 105, 5, 5);
+    g.fillRect(fx + 35, fy - 105, 5, 5);
+    g.fillRect(fx - 40, fy - 22, 5, 5);
+    g.fillRect(fx + 35, fy - 22, 5, 5);
 
-    // Eyes
-    g.fillStyle(0x222222).fillEllipse(fx - 17, fy - 63, 15, 12);
-    g.fillStyle(0x222222).fillEllipse(fx + 17, fy - 63, 15, 12);
-    g.fillStyle(0xffffff).fillEllipse(fx - 12, fy - 66, 5, 4);
-    g.fillStyle(0xffffff).fillEllipse(fx + 20, fy - 66, 5, 4);
+    // Ears
+    g.fillStyle(0xc07858).fillRect(fx - 46, fy - 88, 8, 18);
+    g.fillStyle(0xc07858).fillRect(fx + 38, fy - 88, 8, 18);
 
-    // Nose (bulbous)
-    g.fillStyle(0xd4a070).fillEllipse(fx, fy - 49, 15, 17);
-    g.fillStyle(0xc09060).fillEllipse(fx - 5, fy - 44, 7, 7);
-    g.fillStyle(0xc09060).fillEllipse(fx + 5, fy - 44, 7, 7);
+    // Grey swept hair (pixel art — side parted, swept across)
+    g.fillStyle(0x9a9a9a).fillRect(fx - 42, fy - 115, 84, 16);  // top band
+    g.fillStyle(0x9a9a9a).fillRect(fx - 44, fy - 107, 10, 34);  // left side (fuller)
+    g.fillStyle(0x9a9a9a).fillRect(fx + 34, fy - 107, 10, 20);  // right side (receding)
+    // Hair highlights
+    g.fillStyle(0xc8c8c8).fillRect(fx - 28, fy - 112, 30, 6);
+    g.fillStyle(0xc8c8c8).fillRect(fx - 42, fy - 110, 8, 22);
+
+    // Eyebrows (pixel art, slightly furrowed)
+    g.fillStyle(0x6e6e6e);
+    g.fillRect(fx - 30, fy - 83, 20, 5);
+    g.fillRect(fx + 10, fy - 83, 20, 5);
+
+    // Eyes (pixel art blocks)
+    g.fillStyle(0x1a1a1a);
+    g.fillRect(fx - 28, fy - 74, 18, 14);
+    g.fillRect(fx + 10, fy - 74, 18, 14);
+    // Eye whites
+    g.fillStyle(0xffffff);
+    g.fillRect(fx - 26, fy - 72, 8, 10);
+    g.fillRect(fx + 12, fy - 72, 8, 10);
+    // Iris
+    g.fillStyle(0x3355aa);
+    g.fillRect(fx - 22, fy - 70, 6, 7);
+    g.fillRect(fx + 14, fy - 70, 6, 7);
+    // Pupil
+    g.fillStyle(0x000000);
+    g.fillRect(fx - 21, fy - 68, 4, 5);
+    g.fillRect(fx + 15, fy - 68, 4, 5);
+
+    // Nose (blocky pixel art — slightly bulbous)
+    g.fillStyle(0xb87848).fillRect(fx - 7, fy - 58, 14, 16);
+    g.fillStyle(0xa06838).fillRect(fx - 11, fy - 48, 8, 7);
+    g.fillStyle(0xa06838).fillRect(fx + 3, fy - 48, 8, 7);
 
     // Rosy cheeks
-    g.fillStyle(0xff8888, 0.35).fillEllipse(fx - 30, fy - 50, 26, 17);
-    g.fillStyle(0xff8888, 0.35).fillEllipse(fx + 30, fy - 50, 26, 17);
+    g.fillStyle(0xff7777, 0.35);
+    g.fillRect(fx - 38, fy - 66, 14, 10);
+    g.fillRect(fx + 24, fy - 66, 14, 10);
 
-    // Cigarette (corner of mouth)
-    g.fillStyle(0xeeeeee).fillRect(fx + 14, fy - 43, 28, 5);
-    g.fillStyle(0xcc4400).fillRect(fx + 40, fy - 46, 7, 10);
-    g.fillStyle(0x888888, 0.55).fillEllipse(fx + 43, fy - 53, 11, 16);
+    // Cigarette (right corner of mouth — matches reference)
+    g.fillStyle(0xf0f0f0).fillRect(fx + 16, fy - 46, 32, 6);
+    g.fillStyle(0xff5500).fillRect(fx + 46, fy - 50, 7, 12);
+    // Smoke wisps
+    g.fillStyle(0x999999, 0.55);
+    g.fillRect(fx + 49, fy - 62, 5, 13);
+    g.fillRect(fx + 47, fy - 73, 5, 12);
 
-    // Animated mouth
+    // Animated mouth (pixel art, slightly left of center to clear cigarette)
     const mouthG = this._track(this.add.graphics());
     this._mouthGraphics = mouthG;
-    this._mouthX = fx;
-    this._mouthY = fy - 38;
+    this._mouthX = fx - 5;
+    this._mouthY = fy - 40;
     this._drawMouth(false);
 
     // Speech bubble
@@ -322,20 +346,17 @@ export default class OpeningCutscene extends Phaser.Scene {
     const y = this._mouthY;
     mg.clear();
     if (open) {
-      mg.fillStyle(0x2a0000).fillEllipse(x - 4, y, 24, 15);
-      mg.fillStyle(0xdddddd).fillRect(x - 10, y - 5, 9, 4);
-      mg.fillStyle(0xdddddd).fillRect(x - 2, y + 3, 9, 4);
+      // Open mouth — pixel art rectangle
+      mg.fillStyle(0x2a0000).fillRect(x - 12, y - 5, 22, 12);
+      // Upper teeth row
+      mg.fillStyle(0xeeeeee).fillRect(x - 10, y - 5, 18, 5);
+      // Lower teeth row
+      mg.fillStyle(0xdddddd).fillRect(x - 8, y + 3, 16, 4);
     } else {
-      // Smug closed-mouth smirk
-      mg.lineStyle(2, 0x9b6a3a);
-      mg.beginPath();
-      mg.moveTo(x - 14, y);
-      mg.lineTo(x + 8, y + 1);
-      mg.strokePath();
-      mg.beginPath();
-      mg.moveTo(x + 6, y + 1);
-      mg.lineTo(x + 13, y - 4);
-      mg.strokePath();
+      // Smug closed smirk — pixel art style
+      mg.fillStyle(0x9b4a2a);
+      mg.fillRect(x - 14, y, 20, 4);   // main smirk line
+      mg.fillRect(x + 6, y - 6, 8, 4); // upturned right corner
     }
   }
 

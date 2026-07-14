@@ -215,10 +215,11 @@ export default class Level1Scene extends Phaser.Scene {
     if (this._done) return;
     g.fillStyle(0x222244).fillRect(x - 5, y + 12, 4, 8);
     g.fillStyle(0x222244).fillRect(x + 1,  y + 12, 4, 8);
-    g.fillStyle(0x112255).fillRect(x - 8, y, 16, 14);
-    g.fillStyle(0xdd0000).fillRect(x - 1,  y + 1, 3, 10);
-    g.fillStyle(0xffcc99).fillCircle(x, y - 6, 8);
-    g.fillStyle(0xddbb44).fillRect(x - 7, y - 14, 14, 7);
+    g.fillStyle(0x1a2f5e).fillRect(x - 8, y, 16, 14);
+    g.fillStyle(0xf0b4c4).fillRect(x - 1, y + 1, 4, 10); // pink shirt
+    g.fillStyle(0x2a7cc8).fillRect(x,  y + 1, 2, 10);    // blue REFORM tie
+    g.fillStyle(0xd4a070).fillCircle(x, y - 6, 8);        // ruddy face
+    g.fillStyle(0x9a9a9a).fillRect(x - 7, y - 14, 14, 7); // grey hair
     g.fillStyle(0xcc8833, 0.85).fillRect(x + 8, y + 4, 5, 8);
     g.fillStyle(0xffffff, 0.3).fillRect(x + 8, y + 4, 5, 3);
     g.fillStyle(0xffffff).fillRect(x + 8, y - 6, 6, 2);

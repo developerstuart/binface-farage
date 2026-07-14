@@ -150,21 +150,32 @@ export default class Level3Scene extends Phaser.Scene {
     // Body / suit
     fg.fillStyle(0x1a3a6b);
     fg.fillRect(16, 24, 32, 28);
-    // Red tie
-    fg.fillStyle(0xcc0000);
+    // Pink shirt (between lapels)
+    fg.fillStyle(0xf0b4c4);
+    fg.fillRect(25, 24, 14, 26);
+    // REFORM blue tie
+    fg.fillStyle(0x2a7cc8);
     fg.fillRect(28, 24, 8, 20);
     fg.fillTriangle(26, 44, 38, 44, 32, 54);
+    // Tie stripes (lighter blue)
+    fg.fillStyle(0x5aa8f0);
+    fg.fillRect(29, 28, 6, 3);
+    fg.fillRect(29, 34, 6, 3);
+    fg.fillRect(29, 40, 6, 3);
     // Arms
     fg.fillStyle(0x1a3a6b);
     fg.fillRect(6, 24, 10, 20);
     fg.fillRect(48, 24, 10, 20);
-    // Face
-    fg.fillStyle(0xf4c27a);
+    // Face (ruddy orange)
+    fg.fillStyle(0xd4956a);
     fg.fillRect(18, 2, 28, 22);
-    // Hair
-    fg.fillStyle(0x8b6914);
+    // Grey swept hair
+    fg.fillStyle(0x9a9a9a);
     fg.fillRect(16, 0, 32, 6);
     fg.fillRect(16, 2, 4, 18);
+    // Hair highlight
+    fg.fillStyle(0xc4c4c4);
+    fg.fillRect(20, 1, 12, 3);
     // Eyes (smug)
     fg.fillStyle(0x1a1a1a);
     fg.fillRect(22, 9, 5, 4);
@@ -198,17 +209,25 @@ export default class Level3Scene extends Phaser.Scene {
     fgs.fillRect(12, 60, 40, 20);
     fgs.fillStyle(0x1a3a6b);
     fgs.fillRect(16, 24, 32, 28);
-    fgs.fillStyle(0xcc0000);
+    fgs.fillStyle(0xf0b4c4); // pink shirt
+    fgs.fillRect(25, 24, 14, 26);
+    fgs.fillStyle(0x2a7cc8); // REFORM blue tie
     fgs.fillRect(28, 24, 8, 20);
     fgs.fillTriangle(26, 44, 38, 44, 32, 54);
+    fgs.fillStyle(0x5aa8f0); // tie stripes
+    fgs.fillRect(29, 28, 6, 3);
+    fgs.fillRect(29, 34, 6, 3);
+    fgs.fillRect(29, 40, 6, 3);
     fgs.fillStyle(0x1a3a6b);
     fgs.fillRect(6, 24, 10, 20);
     fgs.fillRect(48, 24, 10, 20);
-    fgs.fillStyle(0xf4c27a);
+    fgs.fillStyle(0xd4956a); // ruddy face
     fgs.fillRect(18, 2, 28, 22);
-    fgs.fillStyle(0x8b6914);
+    fgs.fillStyle(0x9a9a9a); // grey hair
     fgs.fillRect(16, 0, 32, 6);
     fgs.fillRect(16, 2, 4, 18);
+    fgs.fillStyle(0xc4c4c4);
+    fgs.fillRect(20, 1, 12, 3);
     // Shocked eyes (wider)
     fgs.fillStyle(0x1a1a1a);
     fgs.fillRect(21, 8, 7, 6);
@@ -243,17 +262,25 @@ export default class Level3Scene extends Phaser.Scene {
     fgd.fillRect(12, 60, 40, 20);
     fgd.fillStyle(0x1a3a6b);
     fgd.fillRect(16, 24, 32, 28);
-    fgd.fillStyle(0xcc0000);
+    fgd.fillStyle(0xf0b4c4); // pink shirt
+    fgd.fillRect(25, 24, 14, 26);
+    fgd.fillStyle(0x2a7cc8); // REFORM blue tie
     fgd.fillRect(28, 24, 8, 20);
     fgd.fillTriangle(26, 44, 38, 44, 32, 54);
+    fgd.fillStyle(0x5aa8f0); // tie stripes
+    fgd.fillRect(29, 28, 6, 3);
+    fgd.fillRect(29, 34, 6, 3);
+    fgd.fillRect(29, 40, 6, 3);
     fgd.fillStyle(0x1a3a6b);
     fgd.fillRect(6, 24, 10, 20);
     fgd.fillRect(48, 24, 10, 20);
-    fgd.fillStyle(0xf4c27a);
+    fgd.fillStyle(0xd4956a); // ruddy face
     fgd.fillRect(18, 2, 28, 22);
-    fgd.fillStyle(0x8b6914);
+    fgd.fillStyle(0x9a9a9a); // grey hair
     fgd.fillRect(16, 0, 32, 6);
     fgd.fillRect(16, 2, 4, 18);
+    fgd.fillStyle(0xc4c4c4);
+    fgd.fillRect(20, 1, 12, 3);
     // Squinting smug eyes
     fgd.fillStyle(0x1a1a1a);
     fgd.fillRect(22, 10, 5, 3);
