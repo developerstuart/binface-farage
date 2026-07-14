@@ -127,6 +127,7 @@ export default class Level2Scene extends Phaser.Scene {
 
   update(_time, delta) {
     if (this.over) return;
+    if (!this.farage?.body || !this.binface?.body) return;
     const W = this.scale.width;
     const H = this.scale.height;
     const dt = delta;
@@ -616,6 +617,7 @@ export default class Level2Scene extends Phaser.Scene {
   _farageAI(dt) {
     if (this.over) return;
     const f = this.farage;
+    if (!f?.body) return;
     const b = this.binface;
     const dx = b.x - f.x;
     const onGround = f.body.blocked.down;
