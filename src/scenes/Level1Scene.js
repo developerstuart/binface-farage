@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { sfx } from '../audio.js';
 
 const W = 800;
 const H = 600;
@@ -91,10 +92,13 @@ export default class Level1Scene extends Phaser.Scene {
     this.add.rectangle(0, 0, W, 28, 0x000000, 0.75).setOrigin(0);
     this.add.text(8, 5, 'LEVEL 1 — FOLLOW THE MONEY', { font: '13px monospace', fill: '#00ff88' });
 
-    this.add.rectangle(0, H - 24, W, 24, 0x000000, 0.75).setOrigin(0);
-    this.add.text(8, H - 19, 'CLICK/TAP lines to REVEAL  •  Click REVEALED lines to SEVER  •  Stop £5m reaching Clacton!', {
-      font: '10px monospace', fill: '#aaaaaa',
-    });
+    this.add.rectangle(0, H - 36, W, 36, 0x000000, 0.85).setOrigin(0);
+    this.add.text(W / 2, H - 30, '1st click on a line: REVEAL it  •  2nd click on REVEALED line: SEVER it', {
+      font: '11px monospace', fill: '#ffcc00', align: 'center',
+    }).setOrigin(0.5, 0);
+    this.add.text(W / 2, H - 14, 'Move BINFACE over ?? hints to find hidden money trails — stop £5m reaching Clacton!', {
+      font: '10px monospace', fill: '#aaaaaa', align: 'center',
+    }).setOrigin(0.5, 0);
   }
 
   // ─── Lines ───────────────────────────────────────────────────────────────
@@ -121,13 +125,20 @@ export default class Level1Scene extends Phaser.Scene {
 
       if (st === S_HIDDEN) {
         if (!act) { this._lineLabels[i].setVisible(false); return; }
-        // Active hidden line: faint pulsing dashes as a hint
-        const alpha = 0.06 + 0.05 * Math.sin(p);
-        g.lineStyle(2, src.color, alpha);
+        // Active hidden line: pulsing dashes — bright enough to be noticeable but still feel "hidden"
+        const alpha = 0.28 + 0.22 * Math.sin(p * 1.8);
+        g.lineStyle(3, src.color, alpha);
         g.beginPath();
-        this._dashedLine(g, UK.x, UK.y, src.x, src.y, 8, 8);
+        this._dashedLine(g, UK.x, UK.y, src.x, src.y, 10, 7);
         g.strokePath();
-        this._lineLabels[i].setVisible(false);
+        // Show a "??" label so player knows something is here
+        const lbl = this._lineLabels[i];
+        const midX = (UK.x + src.x) / 2;
+        const midY = (UK.y + src.y) / 2;
+        lbl.setPosition(midX, midY);
+        lbl.setText('??');
+        lbl.setVisible(true);
+        lbl.setAlpha(0.45 + 0.35 * Math.sin(p * 1.8));
       } else if (st === S_REVEALED) {
         const alpha = 0.65 + 0.35 * Math.sin(p * 2);
         g.lineStyle(3, src.color, alpha);
@@ -231,11 +242,13 @@ export default class Level1Scene extends Phaser.Scene {
 
   _buildBinface() {
     this._binfaceGfx   = this.add.graphics().setDepth(9);
-    this._binfaceLabel = this.add.text(0, 0, 'BINFACE', {
-      font: '8px monospace', fill: '#00ccff', stroke: '#000', strokeThickness: 2,
+    this._binfaceRadar = this.add.graphics().setDepth(8);
+    this._binfaceLabel = this.add.text(0, 0, 'BINFACE\n(move to scan)', {
+      font: '8px monospace', fill: '#00ccff', stroke: '#000', strokeThickness: 2, align: 'center',
     }).setOrigin(0.5).setDepth(10);
     this._binfacePos    = { x: W * 0.55, y: H * 0.5 };
     this._binfaceTarget = { x: W * 0.55, y: H * 0.5 };
+    this._radarPulse = 0;
     this._drawBinface();
   }
 
@@ -244,16 +257,31 @@ export default class Level1Scene extends Phaser.Scene {
     const g = this._binfaceGfx;
     g.clear();
     if (this._done) return;
+
+    // Radar scan ring
+    const rg = this._binfaceRadar;
+    rg.clear();
+    const rp = this._radarPulse;
+    const rRadius = 28 + 18 * rp;
+    const rAlpha  = 0.6 * (1 - rp);
+    rg.lineStyle(2, 0x00ffcc, rAlpha);
+    rg.strokeCircle(x, y, rRadius);
+    rg.lineStyle(1, 0x00ffcc, rAlpha * 0.4);
+    rg.strokeCircle(x, y, rRadius * 0.55);
+
+    // Bin body
     g.fillStyle(0x336688).fillRect(x - 5, y + 12, 4, 8);
     g.fillStyle(0x336688).fillRect(x + 1,  y + 12, 4, 8);
     g.fillStyle(0x4488aa).fillRect(x - 8, y, 16, 14);
+    // Bin head
     g.fillStyle(0xaaaaaa).fillRect(x - 9, y - 18, 18, 16);
     g.fillStyle(0xcccccc).fillRect(x - 7, y - 20, 14, 4);
     g.fillStyle(0x001133).fillRect(x - 6, y - 14, 12, 5);
-    g.fillStyle(0x0066ff, 0.6).fillRect(x - 5, y - 13, 10, 3);
+    g.fillStyle(0x00ffcc, 0.7).fillRect(x - 5, y - 13, 10, 3);
+    // Arms
     g.fillStyle(0x4488aa).fillCircle(x - 10, y + 6, 3);
     g.fillStyle(0x4488aa).fillCircle(x + 10, y + 6, 3);
-    this._binfaceLabel.setPosition(x, y - 26);
+    this._binfaceLabel.setPosition(x, y - 30);
   }
 
   // ─── HUD ─────────────────────────────────────────────────────────────────
@@ -319,10 +347,12 @@ export default class Level1Scene extends Phaser.Scene {
 
     if (st === S_HIDDEN) {
       this._lineStates[bestIdx] = S_REVEALED;
+      sfx('reveal');
       this._popText(bestIdx, '👁 REVEALED!', SOURCES[bestIdx].hex);
     } else if (st === S_REVEALED) {
       this._lineStates[bestIdx] = S_SEVERED;
       this._lineActive[bestIdx] = false;
+      sfx('sever');
       this._popText(bestIdx, '✂ SEVERED!', '#ff4444');
       this._screenFlash();
       this._checkWin();
@@ -416,6 +446,7 @@ export default class Level1Scene extends Phaser.Scene {
   }
 
   _showOutcome(won) {
+    sfx(won ? 'win' : 'lose');
     this._farageGfx.clear();
     this._binfaceGfx.clear();
 
@@ -468,6 +499,8 @@ export default class Level1Scene extends Phaser.Scene {
       this._binfacePos.x += (tdx / tdst) * step;
       this._binfacePos.y += (tdy / tdst) * step;
     }
+    // Advance radar pulse (0→1 cycle every ~1.2 s)
+    this._radarPulse = (this._radarPulse + delta * 0.0008) % 1;
     this._drawBinface();
 
     this._updateHUD();

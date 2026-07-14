@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { sfx } from '../audio.js';
 
 const TIMER_MS = 14000;
 const WIN_SCORE = 5;
@@ -676,6 +677,7 @@ export default class Level3Scene extends Phaser.Scene {
   }
 
   _onCorrect() {
+    sfx('reveal');
     this.score = Math.min(WIN_SCORE, this.score + 1);
     this._scoreLabel.setText(`✓ ${this.score} / 5`);
 
@@ -696,6 +698,7 @@ export default class Level3Scene extends Phaser.Scene {
   }
 
   _onWrong(timedOut = false) {
+    sfx('sever');
     this.pints = Math.min(LOSE_PINTS, this.pints + 1);
     this._pintsLabel.setText(`🍺 ${this.pints} / 5`);
 
@@ -731,6 +734,7 @@ export default class Level3Scene extends Phaser.Scene {
   _end(playerWon) {
     if (this.over) return;
     this.over = true;
+    sfx(playerWon ? 'win' : 'lose');
 
     const W = this.scale.width;
     const H = this.scale.height;

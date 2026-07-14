@@ -1,7 +1,5 @@
 import Phaser from 'phaser';
-
-// Sound hook stubs — replace with real WebAudio calls when assets exist
-function sfx(/* key */) {}
+import { sfx } from '../audio.js';
 
 const BINFACE_SPEED = 220;
 const FARAGE_SPEED = 105;
@@ -622,28 +620,37 @@ export default class Level2Scene extends Phaser.Scene {
     if (!f?.body) return;
     const b = this.binface;
     const dx = b.x - f.x;
+    const dy = b.y - f.y;
     const onGround = f.body.blocked.down;
 
-    // Move toward player
-    if (Math.abs(dx) > 90) {
-      f.body.setVelocityX(dx > 0 ? FARAGE_SPEED : -FARAGE_SPEED);
-      f.setFlipX(dx < 0); // flipX=true → facing left; flipX=false → facing right
+    // Move toward player (slightly faster than before)
+    if (Math.abs(dx) > 80) {
+      f.body.setVelocityX(dx > 0 ? FARAGE_SPEED * 1.1 : -FARAGE_SPEED * 1.1);
+      f.setFlipX(dx < 0);
       f.play('fg_walk', true);
     } else {
       f.body.setVelocityX(0);
       f.play('fg_idle', true);
     }
 
-    // Occasional random jump
-    if (onGround && Math.random() < 0.004) {
-      f.body.setVelocityY(JUMP_VY * 0.88);
-      sfx('jump');
+    // Jump when player is significantly above OR to get unstuck, more frequent than before
+    if (onGround) {
+      const shouldJump =
+        (dy < -80 && Math.random() < 0.018) ||   // player is above — try to chase
+        (Math.abs(dx) < 20 && Math.random() < 0.006) || // cornered — escape jump
+        Math.random() < 0.003;                           // random harassment jump
+      if (shouldJump) {
+        f.body.setVelocityY(JUMP_VY * 0.92);
+        sfx('jump');
+      }
     }
 
-    // Fire beer toward player
+    // Fire beer toward player — shorter cooldown when close
     this.aiCD -= dt;
-    if (this.aiCD <= 0 && Math.abs(dx) < 520) {
-      this.aiCD = AI_FIRE_CD_BASE + Math.random() * 900;
+    const closeEnough = Math.abs(dx) < 520;
+    if (this.aiCD <= 0 && closeEnough) {
+      const cd = Math.abs(dx) < 200 ? AI_FIRE_CD_BASE * 0.65 : AI_FIRE_CD_BASE;
+      this.aiCD = cd + Math.random() * 700;
       const dir = dx >= 0 ? 1 : -1;
       f.setFlipX(dx < 0);
       this._fireBeer(f.x + dir * 28, f.y - 8, dir);
@@ -751,10 +758,10 @@ export default class Level2Scene extends Phaser.Scene {
 
   _buildTouch(W, H) {
     const t = this.touch;
-    const alpha = 0.33;
-    const r = 27;
-    const bY = H - 48;
-    const ts = { font: '17px monospace', fill: '#fff' };
+    const alpha = 0.45;
+    const r = 36; // larger hit targets
+    const bY = H - 56;
+    const ts = { font: '20px monospace', fill: '#fff' };
 
     const mk = (x, y, col, label, down, up) => {
       const btn = this.add
@@ -770,11 +777,11 @@ export default class Level2Scene extends Phaser.Scene {
       }
     };
 
-    mk(48, bY, 0xffffff, '◀', () => { t.left = true; }, () => { t.left = false; });
-    mk(115, bY, 0xffffff, '▶', () => { t.right = true; }, () => { t.right = false; });
-    mk(W - 48, bY, 0x00ccff, '▲', () => { t.jump = true; });
-    mk(W - 115, bY, 0x888888, '▼', () => { t.crouch = true; }, () => { t.crouch = false; });
-    mk(W - 190, bY, 0xff69b4, 'FIRE', () => { t.fire = true; });
+    mk(54, bY, 0xffffff, '◀', () => { t.left = true; }, () => { t.left = false; });
+    mk(130, bY, 0xffffff, '▶', () => { t.right = true; }, () => { t.right = false; });
+    mk(W - 54, bY, 0x00ccff, '▲', () => { t.jump = true; });
+    mk(W - 130, bY, 0x888888, '▼', () => { t.crouch = true; }, () => { t.crouch = false; });
+    mk(W - 215, bY, 0xff69b4, 'FIRE', () => { t.fire = true; });
   }
 
   // ─────────────────────────────────────────────────────────────
