@@ -57,9 +57,14 @@ function buildFarage({ legPhase = 0, armPhase = 0, hurt = false, attack = false,
     `  <stop offset="100%" stop-color="${skinDark}"/>`,
     '</linearGradient>',
     '<linearGradient id="fHair" x1="0" y1="0" x2="0" y2="1">',
-    '  <stop offset="0%"   stop-color="#E4CC80"/>',
-    '  <stop offset="100%" stop-color="#A88430"/>',
+    '  <stop offset="0%"   stop-color="#C8C8C4"/>',
+    '  <stop offset="60%"  stop-color="#A0A09A"/>',
+    '  <stop offset="100%" stop-color="#787872"/>',
     '</linearGradient>',
+    '<pattern id="fTiePat" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-40 64 0)">',
+    '  <rect width="8" height="8" fill="#4AAAD8"/>',
+    '  <rect width="3" height="8" fill="#1A6AAA"/>',
+    '</pattern>',
     '<linearGradient id="fSuit" x1="0" y1="0" x2="1" y2="0">',
     `  <stop offset="0%"   stop-color="${suitDark}"/>`,
     `  <stop offset="35%"  stop-color="${suitColor}"/>`,
@@ -91,7 +96,7 @@ function buildFarage({ legPhase = 0, armPhase = 0, hurt = false, attack = false,
     `<ellipse cx="64" cy="${hcy - 12}" rx="24" ry="14" fill="url(#fHair)"/>`,
     `<path d="M40 ${hcy - 14} Q64 ${hcy - 30} 88 ${hcy - 14} Q80 ${hcy - 6} 64 ${hcy - 10} Q48 ${hcy - 6} 40 ${hcy - 14}Z" fill="url(#fHair)"/>`,
     // Hair highlight
-    `<path d="M50 ${hcy - 18} Q64 ${hcy - 24} 78 ${hcy - 18}" stroke="#EED878" stroke-width="2" fill="none" stroke-opacity="0.5"/>`,
+    `<path d="M50 ${hcy - 18} Q64 ${hcy - 24} 78 ${hcy - 18}" stroke="#E0E0DC" stroke-width="2" fill="none" stroke-opacity="0.5"/>`,
     // Jowly face
     `<ellipse cx="64" cy="${hcy}" rx="24" ry="22" fill="url(#fSkin)"/>`,
     // Jowl pouches
@@ -148,11 +153,12 @@ function buildFarage({ legPhase = 0, armPhase = 0, hurt = false, attack = false,
   const body = [
     // Suit torso
     `<path d="M24 ${bodyY + 8} Q16 ${bodyY + 48} 18 115 L110 115 Q112 ${bodyY + 48} 104 ${bodyY + 8} Q90 ${bodyY - 4} 76 ${bodyY} L70 ${bodyY + 14} L64 ${bodyY + 8} L58 ${bodyY + 14} L52 ${bodyY} Q38 ${bodyY - 4} 24 ${bodyY + 8}Z" fill="url(#fSuit)"/>`,
-    // White shirt front
-    `<polygon points="52,${bodyY + 2} 64,${bodyY + 18} 76,${bodyY + 2} 70,${bodyY} 64,${bodyY + 12} 58,${bodyY}" fill="#F2F2F2"/>`,
-    // Red tie
-    `<polygon points="62,${bodyY + 2} 66,${bodyY + 2} 69,${bodyY + 34} 64,${bodyY + 40} 59,${bodyY + 34}" fill="#CC2020"/>`,
-    `<polygon points="62,${bodyY + 2} 66,${bodyY + 2} 64,${bodyY + 8}" fill="#AA1010"/>`,
+    // Pink shirt front (matches reference)
+    `<polygon points="52,${bodyY + 2} 64,${bodyY + 18} 76,${bodyY + 2} 70,${bodyY} 64,${bodyY + 12} 58,${bodyY}" fill="#F5C8C8"/>`,
+    // Reform UK blue diagonal-stripe tie
+    `<polygon points="62,${bodyY + 2} 66,${bodyY + 2} 69,${bodyY + 34} 64,${bodyY + 40} 59,${bodyY + 34}" fill="url(#fTiePat)"/>`,
+    // Tie knot (darker)
+    `<polygon points="62,${bodyY + 2} 66,${bodyY + 2} 64,${bodyY + 9}" fill="#0E5080"/>`,
     // Left lapel
     `<polygon points="52,${bodyY + 2} 36,${bodyY + 16} 46,${bodyY + 22} 58,${bodyY + 10}" fill="${suitDark}"/>`,
     // Right lapel
@@ -237,12 +243,12 @@ function buildFarage({ legPhase = 0, armPhase = 0, hurt = false, attack = false,
     `<path d="M40 ${hipsY + 8} Q${llx} ${hipsY + 28} ${llx} 152" stroke="url(#fTrousers)" stroke-width="20" fill="none" stroke-linecap="round"/>`,
     // Right leg
     `<path d="M88 ${hipsY + 8} Q${rlx} ${hipsY + 28} ${rlx} 152" stroke="url(#fTrousers)" stroke-width="20" fill="none" stroke-linecap="round"/>`,
-    // Left shoe
-    `<path d="M${llx - 11} 151 Q${llx - 9} 158 ${llx + 13} 158 Q${llx + 17} 156 ${llx + 11} 151Z" fill="#111111"/>`,
-    `<path d="M${llx - 8} 153 Q${llx} 156 ${llx + 8} 154" stroke="#333322" stroke-width="1" fill="none"/>`,
+    // Left shoe (brown, matches reference)
+    `<path d="M${llx - 11} 151 Q${llx - 9} 158 ${llx + 13} 158 Q${llx + 17} 156 ${llx + 11} 151Z" fill="#6B3A1F"/>`,
+    `<path d="M${llx - 8} 153 Q${llx} 156 ${llx + 8} 154" stroke="#8B5A3A" stroke-width="1" fill="none"/>`,
     // Right shoe
-    `<path d="M${rlx - 11} 151 Q${rlx - 9} 158 ${rlx + 13} 158 Q${rlx + 17} 156 ${rlx + 11} 151Z" fill="#111111"/>`,
-    `<path d="M${rlx - 8} 153 Q${rlx} 156 ${rlx + 8} 154" stroke="#333322" stroke-width="1" fill="none"/>`,
+    `<path d="M${rlx - 11} 151 Q${rlx - 9} 158 ${rlx + 13} 158 Q${rlx + 17} 156 ${rlx + 11} 151Z" fill="#6B3A1F"/>`,
+    `<path d="M${rlx - 8} 153 Q${rlx} 156 ${rlx + 8} 154" stroke="#8B5A3A" stroke-width="1" fill="none"/>`,
   ].join('\n');
 
   // Render order: trousers → body → neck → arms → head (head always on top)
