@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import BootScene from './scenes/BootScene.js';
 import TitleScene from './scenes/TitleScene.js';
 import OpeningCutscene from './scenes/OpeningCutscene.js';
+import Level1Scene from './scenes/Level1Scene.js';
+import Level2Scene from './scenes/Level2Scene.js';
 import PlaceholderScene from './scenes/PlaceholderScene.js';
 
 const config = {
@@ -13,7 +15,14 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, TitleScene, OpeningCutscene, PlaceholderScene],
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 620 },
+      debug: false,
+    },
+  },
+  scene: [BootScene, TitleScene, OpeningCutscene, Level1Scene, Level2Scene, PlaceholderScene],
 };
 
 const game = new Phaser.Game(config);

@@ -76,7 +76,7 @@ export default class OpeningCutscene extends Phaser.Scene {
     this._skipped = true;
     this._clearAct();
     this.cameras.main.fade(300, 0, 0, 0, false, (_cam, p) => {
-      if (p >= 1) this.scene.start('Placeholder');
+      if (p >= 1) this.scene.start('Level1');
     });
   }
 
@@ -745,7 +745,7 @@ export default class OpeningCutscene extends Phaser.Scene {
                     this.cameras.main.fade(800, 0, 0, 0, false, (_cam, p) => {
                       if (p >= 1) {
                         this._clearAct();
-                        this.scene.start('Placeholder');
+                        this.scene.start('Level1');
                       }
                     });
                   })
