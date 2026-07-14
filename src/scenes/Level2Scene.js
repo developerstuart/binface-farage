@@ -304,14 +304,23 @@ export default class Level2Scene extends Phaser.Scene {
     g.fillRect(11, 68 + lb, 15, 4);
     g.fillRect(25, 68 + (lb ? 0 : 5), 15, 4);
 
-    // Suit body
-    g.fillStyle(0x1a3a6b);
-    g.fillRect(12, 28, 28, 28);
+    // Pink shirt (visible between lapels)
+    g.fillStyle(0xf7a8b8);
+    g.fillRect(20, 28, 12, 24);
 
-    // Red tie
-    g.fillStyle(0xcc0000);
-    g.fillRect(23, 28, 6, 22);
-    g.fillTriangle(21, 50, 31, 50, 26, 60);
+    // Suit body (jacket over shirt)
+    g.fillStyle(0x1a3a6b);
+    g.fillRect(12, 28, 8, 26);   // left lapel
+    g.fillRect(32, 28, 8, 26);   // right lapel
+
+    // REFORM blue tie (diagonal stripe pattern)
+    g.fillStyle(0x3a8fd4);
+    g.fillRect(23, 28, 6, 20);
+    g.fillTriangle(21, 48, 31, 48, 26, 58);
+    // Tie stripe highlights
+    g.fillStyle(0x1a5fa0);
+    g.fillRect(24, 30, 2, 6);
+    g.fillRect(24, 38, 2, 6);
 
     // Arms
     g.fillStyle(0x1a3a6b);
@@ -341,14 +350,17 @@ export default class Level2Scene extends Phaser.Scene {
     g.fillStyle(0xf5a623);
     g.fillCircle(51, 36, 4);
 
-    // Face
-    g.fillStyle(0xf4c27a);
+    // Ruddy face (matching reference)
+    g.fillStyle(0xeca070);
     g.fillRect(14, 4, 24, 24);
 
-    // Hair
-    g.fillStyle(0x8b6914);
+    // Grey swept hair (matching reference)
+    g.fillStyle(0xa0a09a);
     g.fillRect(12, 2, 28, 6);
-    g.fillRect(12, 4, 4, 18);
+    g.fillRect(12, 4, 4, 14);
+    // Hair highlight
+    g.fillStyle(0xd0d0cc);
+    g.fillRect(18, 3, 10, 2);
 
     // Ears
     g.fillStyle(0xe8b870);
