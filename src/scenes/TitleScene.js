@@ -60,7 +60,7 @@ export default class TitleScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.input.keyboard.once('keydown', () => this.scene.start('Placeholder'));
-    this.input.once('pointerdown', () => this.scene.start('Placeholder'));
+    this.input.keyboard.once('keydown', () => this.scene.start('Cutscene'));
+    this.input.once('pointerdown', () => this.scene.start('Cutscene'));
   }
 }

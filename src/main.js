@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import BootScene from './scenes/BootScene.js';
 import TitleScene from './scenes/TitleScene.js';
+import OpeningCutscene from './scenes/OpeningCutscene.js';
 import PlaceholderScene from './scenes/PlaceholderScene.js';
 
 const config = {
@@ -12,7 +13,15 @@ const config = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, TitleScene, PlaceholderScene],
+  scene: [BootScene, TitleScene, OpeningCutscene, PlaceholderScene],
 };
 
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+
+game.events.once('ready', () => {
+  const overlay = document.getElementById('loading-overlay');
+  if (overlay) {
+    overlay.classList.add('hidden');
+    overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
+  }
+});

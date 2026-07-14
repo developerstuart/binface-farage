@@ -3,15 +3,18 @@
   "version": "0.1.0",
   "description": "Farage vs Count Binface — retro arcade browser game",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sprites": "node scripts/generate-sprites.js"
   },
   "dependencies": {
     "phaser": "^3.87.0"
   },
   "devDependencies": {
+    "sharp": "^0.33.5",
     "vite": "^5.4.0"
   }
 }
