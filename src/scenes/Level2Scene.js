@@ -50,9 +50,11 @@ export default class Level2Scene extends Phaser.Scene {
     this.milkshakes = this.physics.add.group();
     this.beers = this.physics.add.group();
 
-    // Colliders
-    this.physics.add.collider(this.binface, this.platforms);
-    this.physics.add.collider(this.farage, this.platforms);
+    // Colliders — one-way: only resolve when character is falling (velocity.y >= 0),
+    // so characters can jump up through platforms and land on top.
+    const oneWay = (char) => char.body.velocity.y >= 0;
+    this.physics.add.collider(this.binface, this.platforms, null, oneWay, this);
+    this.physics.add.collider(this.farage, this.platforms, null, oneWay, this);
 
     this.physics.add.collider(this.milkshakes, this.platforms, (p) => {
       if (!p.active) return;
