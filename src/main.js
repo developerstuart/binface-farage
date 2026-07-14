@@ -4,7 +4,7 @@ import TitleScene from './scenes/TitleScene.js';
 import OpeningCutscene from './scenes/OpeningCutscene.js';
 import Level1Scene from './scenes/Level1Scene.js';
 import Level2Scene from './scenes/Level2Scene.js';
-import PlaceholderScene from './scenes/PlaceholderScene.js';
+import Level3Scene from './scenes/Level3Scene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -22,7 +22,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [BootScene, TitleScene, OpeningCutscene, Level1Scene, Level2Scene, PlaceholderScene],
+  scene: [BootScene, TitleScene, OpeningCutscene, Level1Scene, Level2Scene, Level3Scene],
 };
 
 const game = new Phaser.Game(config);

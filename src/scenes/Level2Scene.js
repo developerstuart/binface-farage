@@ -799,8 +799,9 @@ export default class Level2Scene extends Phaser.Scene {
       .setDepth(61);
 
     this.time.delayedCall(900, () => {
-      this.input.keyboard.once('keydown', () => this.scene.start('Title'));
-      this.input.once('pointerdown', () => this.scene.start('Title'));
+      const next = playerWon ? 'Level3' : 'Title';
+      this.input.keyboard.once('keydown', () => this.scene.start(next));
+      this.input.once('pointerdown', () => this.scene.start(next));
     });
   }
 }
